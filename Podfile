@@ -1,0 +1,14 @@
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '13.0'
+
+target 'NoteBook' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for NoteBook
+
+pod 'SnapKit'
+pod 'SQLite.swift' 
+
+
+end
