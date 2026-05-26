@@ -38,8 +38,8 @@ class NoteListTableViewController: UITableViewController {
     }
     
    @objc func deleteOperation() {
-       
-        
+       DataManager.deleteGroup(name: groupName!)
+       self.navigationController?.popViewController(animated: true)
     }
     
     override func viewDidLoad() {
@@ -85,6 +85,7 @@ class NoteListTableViewController: UITableViewController {
         let infoVC = NoteInfoViewController()
         infoVC.group = model.group!
         infoVC.isNew = false
+        infoVC.noteModel = model
         self.navigationController?.pushViewController(infoVC, animated: true)
     }
 

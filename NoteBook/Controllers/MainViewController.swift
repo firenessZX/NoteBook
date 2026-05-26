@@ -18,8 +18,14 @@ class MainViewController: UIViewController,UICollectionViewDelegate,UICollection
         collectionView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.titleArray = DataManager.getGroupData()
+        self.collectionView.reloadData()
+    }
+    
     func setupNavItems() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
@@ -53,6 +59,7 @@ class MainViewController: UIViewController,UICollectionViewDelegate,UICollection
                 return
             }
             
+            DataManager.saveGroup(name: text)
             self.collectionView.performBatchUpdates {
                 let indexPath = IndexPath(item: self.viewModel.titleArray.count, section: 0)
                 self.collectionView.insertItems(at: [indexPath])

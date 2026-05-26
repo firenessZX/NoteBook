@@ -58,6 +58,51 @@ class DataManager: NSObject {
         let _ = try! sqlHandle?.run(insert)
             
     }
+    //更新一条记事内容
+    class func updateNote(note: NoteModel) {
+        if !isOpen {
+            self.openDataBase()
+        }
+        //根据主键 id 来进行更新
+        let noteTable = Table("noteTable")
+        let nId = Expression<Int64>("id")
+        let alice = noteTable.filter(nId == Int64(note.noteId!))
+        let ownGroup = Expression<String?>("ownGroup")
+        let body = Expression<String?>("body")
+        let title = Expression<String?>("title")
+        let time = Expression<String?>("time")
+        let _ = try? sqlHandle?.run(alice.update(ownGroup <- note.group,body <- note.body,title <- note.title,time <- note.time))
+    }
+    
+    //删除一条记事
+    class func deleteNote(note: NoteModel) {
+        if !isOpen {
+            self.openDataBase()
+        }
+        let noteTable = Table("noteTable")
+        let nId = Expression<Int64>("id")
+        let alice = noteTable.filter(nId == Int64(note.noteId!))
+        let _ = try? sqlHandle?.run(alice.delete())
+    }
+    
+    //删除一个分组，将其下所有记事删除
+    class func deleteGroup(name: String) {
+        if !isOpen {
+            self.openDataBase()
+        }
+        //首先删除分组下所有记事
+        let noteTable = Table("noteTable")
+        let ownGroup = Expression<String?>("ownGroup")
+        let alice = noteTable.filter(ownGroup == name)
+        let _ = try? sqlHandle?.run(alice.delete())
+        
+        let groupTable = Table("group")
+        let gName = Expression<String?>("groupName")
+        let gAlice = groupTable.filter(gName == name)
+        //再删除分组
+        let _ = try? sqlHandle?.run(gAlice.delete())
+        
+    }
     
     class func getNote(group: String) -> [NoteModel] {
         if !isOpen {

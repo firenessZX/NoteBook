@@ -26,8 +26,12 @@ class NoteInfoViewController: UIViewController {
       
     }
     
+    //删除一条记事内容
    @objc func handlerDelete() {
-        
+       if !isNew {
+           DataManager.deleteNote(note: noteModel!)
+           self.navigationController?.popViewController(animated: true)
+       }
     }
     
    @objc func handerSave() {
@@ -44,6 +48,18 @@ class NoteInfoViewController: UIViewController {
                noteModel?.time = dateFormatter.string(from: Date())
                noteModel?.group = group
                DataManager.addNote(note: noteModel!)
+               self.navigationController?.popViewController(animated: true)
+           }
+           
+       }else{
+           //更新记事
+           if titleTextField.text != nil && titleTextField.text!.count > 0 {
+               noteModel?.title = titleTextField.text
+               noteModel?.body = contentTextView.text
+               let dateFormatter = DateFormatter()
+               dateFormatter.dateFormat = "yyyy-MM-dd HH:mm ss"
+               noteModel?.time = dateFormatter.string(from: Date())
+               DataManager.updateNote(note: noteModel!)
                self.navigationController?.popViewController(animated: true)
            }
            
@@ -70,7 +86,6 @@ class NoteInfoViewController: UIViewController {
             make.height.equalTo(300)
         }
                 
-        noteModel = DataManager.getNote(group: group!).first
         self.titleTextField.text = noteModel?.title
         self.contentTextView.text = noteModel?.body
         
